@@ -1,19 +1,18 @@
 import streamlit as st
-import os
 import logging
+import os
 import re
 import time
 import sqlite3
-from datetime import datetime, timedelta
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 from bs4 import BeautifulSoup
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service as ChromeService
 
 # Configuración de logs
 def configurar_logs():
@@ -191,8 +190,11 @@ def enviar_respuesta(driver, respuesta):
         logging.error(f"Error al enviar respuesta: {e}")
 
 def iniciar_driver():
-    options = webdriver.ChromeOptions()
-    return webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    return webdriver.Chrome(executable_path='/usr/bin/chromedriver', options=options)
 
 def manejar_error_critico(driver=None):
     logging.critical("Ocurrió un error crítico. Reiniciando el script...")
@@ -228,16 +230,8 @@ def main():
         conn = init_db('estado_mensajes.db')
         estado = cargar_estado(conn)
         driver = iniciar_driver()
-        try:
-            iniciar_sesion(driver)
-            driver.get('https://www.facebook.com/messages/t/')
-            detectar_y_responder_mensaje_nuevo(driver, estado, conn)
-        except Exception as e:
-            logging.error(f"Error principal: {e}")
-            manejar_error_critico(driver)
-        finally:
-            if 'driver' in locals():
-                driver.quit()
+        iniciar_sesion(driver)
+        st.write("Sesión iniciada")
 
 # Llama a la función principal
 if __name__ == "__main__":
