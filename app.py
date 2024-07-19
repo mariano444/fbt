@@ -192,9 +192,6 @@ def enviar_respuesta(driver, respuesta):
 
 def iniciar_driver():
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
     return webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
 def manejar_error_critico(driver=None):
