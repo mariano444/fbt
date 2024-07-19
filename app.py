@@ -195,7 +195,7 @@ def iniciar_driver():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    return webdriver.Chrome(service=ChromeService('/usr/bin/chromedriver'), options=options)
+    return webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
 def manejar_error_critico(driver=None):
     logging.critical("Ocurrió un error crítico. Reiniciando el script...")
