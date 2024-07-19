@@ -13,6 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 from bs4 import BeautifulSoup
+from webdriver_manager.chrome import ChromeDriverManager
 
 # Configuración de logs
 def configurar_logs():
@@ -194,7 +195,7 @@ def iniciar_driver():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    return webdriver.Chrome(executable_path='/usr/bin/chromedriver', options=options)
+    return webdriver.Chrome(service=ChromeService('/usr/bin/chromedriver'), options=options)
 
 def manejar_error_critico(driver=None):
     logging.critical("Ocurrió un error crítico. Reiniciando el script...")
