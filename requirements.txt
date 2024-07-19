@@ -1,5 +1,5 @@
 streamlit
-beautifulsoup4
 selenium
+beautifulsoup4
 webdriver-manager
-sqlite3
+
